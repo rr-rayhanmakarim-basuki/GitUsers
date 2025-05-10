@@ -14,9 +14,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -31,6 +35,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.gitusers.R
 import com.gitusers.model.GithubUserDetail
 import com.gitusers.model.GithubUserRepo
@@ -41,24 +46,43 @@ import com.gitusers.ui.theme.Purple80
 import com.gitusers.ui.theme.PurpleGrey40
 
 @Composable
-fun UserDetailScreen() {
-    UserDetailScreenContent(ModelMocker.mockUserDetailScreenState())
+fun UserDetailScreen(navController: NavController) {
+    UserDetailScreenContent(
+        state = ModelMocker.mockUserDetailScreenState(),
+        onBackButtonClicked = {
+            navController.popBackStack()
+        }
+    )
 }
 
 @Composable
-fun UserDetailScreenContent(state: UserDetailScreenState) {
+fun UserDetailScreenContent(
+    state: UserDetailScreenState,
+    onBackButtonClicked: () -> Unit = {}
+) {
     GitUsersTheme {
         Scaffold(
             modifier = Modifier
                 .fillMaxSize()
                 .statusBarsPadding(),
             topBar = {
-                Text(
-                    stringResource(R.string.user_detail_toolbar_title),
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(16.dp)
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(top = 16.dp, bottom = 16.dp, end = 16.dp)
+                ) {
+                    IconButton(onClick = { onBackButtonClicked.invoke() }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Default.ArrowBack,
+                            contentDescription = ""
+                        )
+                    }
+
+                    Text(
+                        stringResource(R.string.user_detail_toolbar_title),
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
             },
             content = { innerPadding ->
                 Column(

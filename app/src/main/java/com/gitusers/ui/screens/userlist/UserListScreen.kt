@@ -35,22 +35,32 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.gitusers.R
 import com.gitusers.model.GithubUser
 import com.gitusers.model.ModelMocker
 import com.gitusers.ui.common.CircularUserImageWithPlaceholderView
+import com.gitusers.ui.navigation.AppNavigationScreenList
 import com.gitusers.ui.theme.GitUsersTheme
 import com.gitusers.ui.theme.Purple80
 import com.gitusers.ui.theme.PurpleGrey40
 
 @Composable
-fun UserListScreen() {
+fun UserListScreen(navController: NavController) {
     val state = ModelMocker.mockUserListScreenState()
-    UserListScreenContent(state)
+    UserListScreenContent(
+        state,
+        { user ->
+            navController.navigate(AppNavigationScreenList.USER_LIST_DETAIL.route)
+        }
+    )
 }
 
 @Composable
-fun UserListScreenContent(state: UserListScreenState) {
+fun UserListScreenContent(
+    state: UserListScreenState,
+    onCardClick: (GithubUser) -> Unit = {}
+) {
     GitUsersTheme {
         Scaffold(
             modifier = Modifier
@@ -72,7 +82,10 @@ fun UserListScreenContent(state: UserListScreenState) {
                         color = PurpleGrey40,
                         modifier = Modifier.padding(top = 16.dp)
                     )
-                    UserListView(state)
+                    UserListView(
+                        state,
+                        onCardClick
+                    )
                 }
             }
         )
@@ -80,7 +93,10 @@ fun UserListScreenContent(state: UserListScreenState) {
 }
 
 @Composable
-fun UserListView(state: UserListScreenState) {
+fun UserListView(
+    state: UserListScreenState,
+    onCardClick: (GithubUser) -> Unit
+) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         contentPadding = PaddingValues(
@@ -89,7 +105,10 @@ fun UserListView(state: UserListScreenState) {
         )
     ) {
         items(state.userList) { user ->
-            UserView(user)
+            UserCardView(
+                user,
+                onCardClick
+            )
         }
     }
 }
@@ -139,14 +158,18 @@ fun CustomSearchBar() {
 }
 
 @Composable
-fun UserView(
+fun UserCardView(
     user: GithubUser,
+    onCardClick: (GithubUser) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-
     Card(
         colors = CardDefaults.cardColors().copy(
             containerColor = Purple80
+        ),
+        onClick = { onCardClick.invoke(user) },
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 6.dp
         ),
         modifier = modifier.fillMaxWidth()
     ) {

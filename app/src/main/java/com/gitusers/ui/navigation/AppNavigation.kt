@@ -13,9 +13,9 @@ import com.gitusers.ui.screens.userlist.UserListScreen
 fun AppNavigation() {
     val navController = rememberNavController()
 
-    NavHost(navController, startDestination = USER_LIST_DETAIL.route) {
-        composable(USER_LIST_SCREEN.route) { UserListScreen() }
-        composable(USER_LIST_DETAIL.route) { UserDetailScreen() }
+    NavHost(navController, startDestination = USER_LIST_SCREEN.route) {
+        composable(USER_LIST_SCREEN.route) { UserListScreen(navController) }
+        composable(USER_LIST_DETAIL.route) { UserDetailScreen(navController) }
     }
 }
 
