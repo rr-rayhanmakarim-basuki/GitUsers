@@ -5,4 +5,5 @@
     <string name="defaiult_error_message">Ooops something went wrong</string>
     <string name="default_loading_message">Please Wait....</string>
     <string name="retry">Retry</string>
+    <string name="user_detail_toolbar_title">Git User Detail</string>
 </resources>
