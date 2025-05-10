@@ -123,7 +123,10 @@ fun UserDetailHeaderView(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
     ) {
-        CircularUserImageWithPlaceholderView("", size = 64.dp)
+        CircularUserImageWithPlaceholderView(
+            userDetail.avatarUrl,
+            size = 64.dp
+        )
         Column(
             modifier = Modifier.padding(start = 16.dp)
         ) {
