@@ -77,6 +77,9 @@ fun UserDetailScreen(
                     repo.name
                 )
             )
+        },
+        onRetryButtonClicked = {
+            viewModel.loadUserDetail()
         }
     )
 }
@@ -85,7 +88,8 @@ fun UserDetailScreen(
 fun UserDetailScreenContent(
     state: UserDetailScreenState,
     onBackButtonClicked: () -> Unit = {},
-    onCardClicked: (GithubUserRepo) -> Unit = {}
+    onCardClicked: (GithubUserRepo) -> Unit = {},
+    onRetryButtonClicked: () -> Unit = {}
 ) {
     GitUsersTheme {
         Scaffold(
@@ -123,7 +127,10 @@ fun UserDetailScreenContent(
                                 )
                             }
 
-                            OverallState.FAILED -> ErrorView()
+                            OverallState.FAILED -> ErrorView(
+                                onRetry = onRetryButtonClicked,
+                                buttonText = stringResource(R.string.retry)
+                            )
                         }
                     }
                 }

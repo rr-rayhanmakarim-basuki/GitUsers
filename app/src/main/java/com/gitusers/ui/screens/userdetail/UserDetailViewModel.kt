@@ -1,5 +1,6 @@
 package com.gitusers.ui.screens.userdetail
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -22,17 +23,31 @@ class UserDetailViewModel @Inject constructor(
     private val userName: String = savedStateHandle["userName"] ?: ""
 
     fun loadUserDetail() {
+        _state.update {
+            it.copy(
+                overallState = OverallState.LOADING
+            )
+        }
         viewModelScope.launch {
             val userDetailResult = useCase.getUserDetail(userName)
 
-            userDetailResult.onSuccess { detail ->
-                _state.update {
-                    it.copy(
-                        overallState = OverallState.SUCCESS,
-                        userDetail = detail
-                    )
+            userDetailResult
+                .onSuccess { detail ->
+                    _state.update {
+                        it.copy(
+                            overallState = OverallState.SUCCESS,
+                            userDetail = detail
+                        )
+                    }
                 }
-            }
+                .onFailure { exception ->
+                    Log.e("FailedCall", exception.message.toString())
+                    _state.update {
+                        it.copy(
+                            overallState = OverallState.FAILED
+                        )
+                    }
+                }
         }
     }
 }
