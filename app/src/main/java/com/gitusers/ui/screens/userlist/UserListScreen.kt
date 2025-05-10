@@ -64,8 +64,7 @@ fun UserListScreenContent(state: UserListScreenState) {
                     stringResource(R.string.toolbar_title),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier
-                        .padding(16.dp)
+                    modifier = Modifier.padding(16.dp)
                 )
             },
             content = { innerPadding ->
@@ -76,20 +75,25 @@ fun UserListScreenContent(state: UserListScreenState) {
                         color = PurpleGrey40,
                         modifier = Modifier.padding(top = 16.dp)
                     )
-                    LazyColumn(
-                        verticalArrangement = Arrangement.spacedBy(16.dp),
-                        contentPadding = PaddingValues(
-                            vertical = 16.dp,
-                            horizontal = 16.dp
-                        )
-                    ) {
-                        items(state.userList) { user ->
-                            UserView(user)
-                        }
-                    }
+                    UserListView(state)
                 }
             }
         )
+    }
+}
+
+@Composable
+fun UserListView(state: UserListScreenState) {
+    LazyColumn(
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        contentPadding = PaddingValues(
+            vertical = 16.dp,
+            horizontal = 16.dp
+        )
+    ) {
+        items(state.userList) { user ->
+            UserView(user)
+        }
     }
 }
 
@@ -112,6 +116,7 @@ fun CustomSearchBar() {
             painterResource(R.drawable.ic_search),
             contentDescription = null,
             modifier = Modifier
+                .padding(end = 16.dp)
                 .size(20.dp)
         )
         TextField(
@@ -146,8 +151,7 @@ fun UserView(
         colors = CardDefaults.cardColors().copy(
             containerColor = Purple80
         ),
-        modifier = modifier
-            .fillMaxWidth()
+        modifier = modifier.fillMaxWidth()
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,

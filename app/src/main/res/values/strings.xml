@@ -2,4 +2,7 @@
     <string name="app_name">Git Users</string>
     <string name="toolbar_title">Git Users</string>
     <string name="search_placehoder">Search....</string>
+    <string name="defaiult_error_message">Ooops something went wrong</string>
+    <string name="default_loading_message">Please Wait....</string>
+    <string name="retry">Retry</string>
 </resources>
