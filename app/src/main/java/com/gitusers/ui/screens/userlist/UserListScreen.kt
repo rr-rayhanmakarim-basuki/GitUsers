@@ -1,6 +1,6 @@
 package com.gitusers.ui.screens.userlist
 
-import GithubUser
+import com.gitusers.model.GithubUser
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

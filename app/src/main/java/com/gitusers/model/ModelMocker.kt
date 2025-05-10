@@ -1,6 +1,5 @@
 package com.gitusers.model
 
-import GithubUser
 import com.gitusers.ui.screens.userlist.UserListScreenState
 
 class ModelMocker {
