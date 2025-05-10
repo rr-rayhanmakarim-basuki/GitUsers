@@ -1,3 +1,15 @@
+import java.util.Properties
+import java.io.FileInputStream
+
+val localProps = Properties().apply {
+    val propsFile = rootProject.file("local.properties")
+    if (propsFile.exists()) {
+        load(FileInputStream(propsFile))
+    }
+}
+
+val githubPat: String = localProps.getProperty("GITHUB_PAT") ?: ""
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -21,14 +33,19 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField("String", "GITHUB_PAT", "\"$githubPat\"")
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            buildConfigField("String", "GITHUB_PAT", "\"$githubPat\"")
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -38,6 +55,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
