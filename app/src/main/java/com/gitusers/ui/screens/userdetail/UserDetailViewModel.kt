@@ -22,6 +22,10 @@ class UserDetailViewModel @Inject constructor(
 
     private val userName: String = savedStateHandle["userName"] ?: ""
 
+    init {
+        loadUserDetail()
+    }
+
     fun loadUserDetail() {
         _state.update {
             it.copy(

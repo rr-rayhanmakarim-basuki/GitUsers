@@ -59,10 +59,6 @@ fun UserDetailScreen(
     navController: NavController,
     viewModel: UserDetailViewModel = hiltViewModel()
 ) {
-    LaunchedEffect(Unit) {
-        viewModel.loadUserDetail()
-    }
-
     val state by viewModel.state.collectAsState()
 
     UserDetailScreenContent(
