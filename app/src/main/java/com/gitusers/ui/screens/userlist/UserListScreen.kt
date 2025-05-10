@@ -41,14 +41,13 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.gitusers.R
 import com.gitusers.model.ModelMocker
 import com.gitusers.model.response.GithubUserResponse
 import com.gitusers.ui.common.CircularUserImageWithPlaceholderView
 import com.gitusers.ui.common.LoadingView
-import com.gitusers.ui.navigation.AppNavigationScreenList
+import com.gitusers.ui.navigation.AppNavigationScreen
 import com.gitusers.ui.theme.GitUsersTheme
 import com.gitusers.ui.theme.Purple80
 import com.gitusers.ui.theme.PurpleGrey40
@@ -68,7 +67,9 @@ fun UserListScreen(
             viewModel.onSearch()
         },
         onCardClick = { user ->
-            navController.navigate(AppNavigationScreenList.USER_LIST_DETAIL.route)
+            navController.navigate(
+                AppNavigationScreen.UserDetailScreen.createRoute(user.userName)
+            )
         }
     )
 }

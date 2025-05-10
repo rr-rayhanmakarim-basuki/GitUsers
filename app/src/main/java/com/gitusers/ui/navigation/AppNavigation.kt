@@ -1,11 +1,13 @@
 package com.gitusers.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.gitusers.ui.navigation.AppNavigationScreenList.USER_LIST_DETAIL
-import com.gitusers.ui.navigation.AppNavigationScreenList.USER_LIST_SCREEN
+import androidx.navigation.navArgument
+import com.gitusers.ui.navigation.AppNavigationScreen.UserDetailScreen
+import com.gitusers.ui.navigation.AppNavigationScreen.UserListScreen
 import com.gitusers.ui.screens.userdetail.UserDetailScreen
 import com.gitusers.ui.screens.userlist.UserListScreen
 
@@ -13,13 +15,22 @@ import com.gitusers.ui.screens.userlist.UserListScreen
 fun AppNavigation() {
     val navController = rememberNavController()
 
-    NavHost(navController, startDestination = USER_LIST_SCREEN.route) {
-        composable(USER_LIST_SCREEN.route) { UserListScreen(navController) }
-        composable(USER_LIST_DETAIL.route) { UserDetailScreen(navController) }
+    NavHost(navController, startDestination = UserListScreen.route) {
+        composable(UserListScreen.route) { UserListScreen(navController) }
+        composable(
+            route = UserDetailScreen.route,
+            arguments = listOf(navArgument("userName") { type = NavType.StringType })
+        ) {
+            UserDetailScreen(
+                navController = navController
+            )
+        }
     }
 }
 
-enum class AppNavigationScreenList(val route: String) {
-    USER_LIST_SCREEN(route = "userList"),
-    USER_LIST_DETAIL(route = "userDetail")
+sealed class AppNavigationScreen(val route: String) {
+    data object UserListScreen : AppNavigationScreen(route = "userList")
+    data object UserDetailScreen : AppNavigationScreen(route = "userDetail/{userName}") {
+        fun createRoute(userName: String) = "userDetail/$userName"
+    }
 }

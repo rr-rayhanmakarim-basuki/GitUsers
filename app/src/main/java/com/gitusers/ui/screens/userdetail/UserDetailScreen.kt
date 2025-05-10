@@ -1,7 +1,10 @@
 package com.gitusers.ui.screens.userdetail
 
+import ErrorView
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
@@ -26,6 +29,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,20 +41,31 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.gitusers.R
 import com.gitusers.model.GithubUserDetail
 import com.gitusers.model.GithubUserRepo
 import com.gitusers.model.ModelMocker
 import com.gitusers.ui.common.CircularUserImageWithPlaceholderView
+import com.gitusers.ui.common.LoadingView
 import com.gitusers.ui.theme.GitUsersTheme
 import com.gitusers.ui.theme.Purple80
 import com.gitusers.ui.theme.PurpleGrey40
 
 @Composable
-fun UserDetailScreen(navController: NavController) {
+fun UserDetailScreen(
+    navController: NavController,
+    viewModel: UserDetailViewModel = hiltViewModel()
+) {
+    LaunchedEffect(Unit) {
+        viewModel.loadUserDetail()
+    }
+
+    val state by viewModel.state.collectAsState()
+
     UserDetailScreenContent(
-        state = ModelMocker.mockUserDetailScreenState(),
+        state = state,
         onBackButtonClicked = {
             navController.popBackStack()
         }
@@ -85,32 +102,44 @@ fun UserDetailScreenContent(
                 }
             },
             content = { innerPadding ->
-                Column(
-                    modifier = Modifier
-                        .padding(innerPadding)
-                ) {
-                    UserDetailHeaderView(
-                        userDetail = state.userDetail,
-                        modifier = Modifier.padding(horizontal = 16.dp)
-                    )
-
-                    HorizontalDivider(
-                        thickness = 1.dp,
-                        color = PurpleGrey40,
-                        modifier = Modifier.padding(top = 16.dp)
-                    )
-
-                    LazyColumn(
-                        contentPadding = PaddingValues(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(16.dp)
-                    ) {
-                        items(state.userDetail.repoList) { repo ->
-                            UserDetailRepoCardView(repo)
+                Box(modifier = Modifier.padding(innerPadding)) {
+                    AnimatedContent(state.overallState) { targetState ->
+                        when (targetState) {
+                            OverallState.LOADING -> LoadingView()
+                            OverallState.SUCCESS -> UserDetailView(state.userDetail)
+                            OverallState.FAILED -> ErrorView()
                         }
                     }
                 }
             }
         )
+    }
+}
+
+@Composable
+fun UserDetailView(
+    userDetail: GithubUserDetail,
+) {
+    Column {
+        UserDetailHeaderView(
+            userDetail = userDetail,
+            modifier = Modifier.padding(horizontal = 16.dp)
+        )
+
+        HorizontalDivider(
+            thickness = 1.dp,
+            color = PurpleGrey40,
+            modifier = Modifier.padding(top = 16.dp)
+        )
+
+        LazyColumn(
+            contentPadding = PaddingValues(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            items(userDetail.repoList) { repo ->
+                UserDetailRepoCardView(repo)
+            }
+        }
     }
 }
 
