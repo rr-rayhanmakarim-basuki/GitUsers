@@ -1,5 +1,8 @@
 package com.gitusers.ui.screens.userlist
 
+import EmptyResultView
+import ErrorView
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -43,6 +46,7 @@ import com.gitusers.R
 import com.gitusers.model.GithubUser
 import com.gitusers.model.ModelMocker
 import com.gitusers.ui.common.CircularUserImageWithPlaceholderView
+import com.gitusers.ui.common.LoadingView
 import com.gitusers.ui.navigation.AppNavigationScreenList
 import com.gitusers.ui.theme.GitUsersTheme
 import com.gitusers.ui.theme.Purple80
@@ -56,10 +60,13 @@ fun UserListScreen(
     val state by viewModel.state.collectAsState()
     UserListScreenContent(
         state,
-        { query ->
-            viewModel.onQueryChanged(query)
+        onTextInputChanged = { query ->
+            viewModel.onInputTextChanged(query)
         },
-        { user ->
+        onSearch = {
+            viewModel.onSearch()
+        },
+        onCardClick = { user ->
             navController.navigate(AppNavigationScreenList.USER_LIST_DETAIL.route)
         }
     )
@@ -68,7 +75,8 @@ fun UserListScreen(
 @Composable
 fun UserListScreenContent(
     state: UserListScreenState,
-    onQueryChanged: (String) -> Unit = {},
+    onTextInputChanged: (String) -> Unit = {},
+    onSearch: () -> Unit = {},
     onCardClick: (GithubUser) -> Unit = {}
 ) {
     GitUsersTheme {
@@ -87,18 +95,37 @@ fun UserListScreenContent(
             content = { innerPadding ->
                 Column(modifier = Modifier.padding(innerPadding)) {
                     CustomSearchBar(
-                        state.query,
-                        onQueryChanged
+                        state.inputText,
+                        onTextInputChanged,
+                        onSearch
                     )
                     HorizontalDivider(
                         thickness = 1.dp,
                         color = PurpleGrey40,
                         modifier = Modifier.padding(top = 16.dp)
                     )
-                    UserListView(
-                        state,
-                        onCardClick
-                    )
+
+                    AnimatedContent(state.overallState) { targetState ->
+                        when (targetState) {
+                            UserListScreenOverallState.INITIAL_STATE -> {
+                                EmptyResultView(
+                                    painter = painterResource(R.drawable.il_initial_page),
+                                    message = stringResource(R.string.initial_message),
+                                )
+                            }
+
+                            UserListScreenOverallState.SEARCH_SUCCESSFUL_STATE -> {
+                                UserListView(
+                                    state,
+                                    onCardClick
+                                )
+                            }
+
+                            UserListScreenOverallState.SEARCH_ERROR_STATE -> ErrorView()
+                            UserListScreenOverallState.SEARCH_EMPTY_RESULT_STATE -> EmptyResultView()
+                            UserListScreenOverallState.LOADING_STATE -> LoadingView()
+                        }
+                    }
                 }
             }
         )
@@ -129,7 +156,8 @@ fun UserListView(
 @Composable
 fun CustomSearchBar(
     query: String,
-    onQueryChanged: (String) -> Unit
+    onTextInputChanged: (String) -> Unit,
+    onSearch: () -> Unit
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     Row(
@@ -152,7 +180,7 @@ fun CustomSearchBar(
         )
         TextField(
             value = query,
-            onValueChange = { newValue -> onQueryChanged.invoke(newValue) },
+            onValueChange = { newValue -> onTextInputChanged.invoke(newValue) },
             placeholder = {
                 Text(stringResource(R.string.search_placehoder))
             },
@@ -160,6 +188,7 @@ fun CustomSearchBar(
             keyboardActions = KeyboardActions(
                 onSearch = {
                     keyboardController?.hide()
+                    onSearch.invoke()
                 },
             ),
             colors = TextFieldDefaults.colors(

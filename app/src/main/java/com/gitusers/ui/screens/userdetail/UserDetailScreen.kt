@@ -153,7 +153,7 @@ fun UserDetailHeaderView(
                     .height(intrinsicSize = IntrinsicSize.Max)
             ) {
                 Text(
-                    text = "Followers: " + userDetail.followers,
+                    text = stringResource(R.string.followers, userDetail.followers),
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.Medium,
                     color = PurpleGrey40
@@ -165,7 +165,7 @@ fun UserDetailHeaderView(
                 )
 
                 Text(
-                    text = "Followers: " + userDetail.followers,
+                    text = stringResource(R.string.following, userDetail.following),
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.Medium,
                     color = PurpleGrey40

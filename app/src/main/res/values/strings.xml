@@ -6,4 +6,8 @@
     <string name="default_loading_message">Please Wait....</string>
     <string name="retry">Retry</string>
     <string name="user_detail_toolbar_title">Git User Detail</string>
+    <string name="followers">Followers: %1$s</string>
+    <string name="following">Following: %1$s</string>
+    <string name="default_empty_result_message">No result match the query. Please use another query</string>
+    <string name="initial_message">Input your query on search bar to start !</string>
 </resources>

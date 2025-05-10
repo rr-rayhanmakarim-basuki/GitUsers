@@ -34,7 +34,9 @@ fun ErrorView(
     onRetry: () -> Unit = {},
 ) {
     Box(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier
+            .fillMaxSize()
+            .padding(bottom = 120.dp),
         contentAlignment = Alignment.Center
     ) {
         Column(
