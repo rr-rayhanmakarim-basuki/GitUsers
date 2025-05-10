@@ -1,11 +1,8 @@
 package com.gitusers.ui.screens.userlist
 
-import com.gitusers.model.GithubUser
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -16,7 +13,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -31,7 +27,6 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
@@ -41,7 +36,9 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.gitusers.R
+import com.gitusers.model.GithubUser
 import com.gitusers.model.ModelMocker
+import com.gitusers.ui.common.CircularUserImageWithPlaceholderView
 import com.gitusers.ui.theme.GitUsersTheme
 import com.gitusers.ui.theme.Purple80
 import com.gitusers.ui.theme.PurpleGrey40
@@ -157,11 +154,9 @@ fun UserView(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.padding(16.dp)
         ) {
-            Box(
-                modifier = Modifier
-                    .clip(CircleShape)
-                    .background(color = PurpleGrey40)
-                    .size(40.dp)
+            CircularUserImageWithPlaceholderView(
+                imageUrl = user.avatarUrl,
+                size = 40.dp
             )
 
             Text(
