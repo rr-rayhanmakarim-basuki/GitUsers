@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Git Users</string>
+    <string name="toolbar_title">Git Users</string>
+    <string name="search_placehoder">Search....</string>
 </resources>
