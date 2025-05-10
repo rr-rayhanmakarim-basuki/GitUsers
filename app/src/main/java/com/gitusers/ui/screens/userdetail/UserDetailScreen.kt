@@ -49,6 +49,7 @@ import com.gitusers.model.GithubUserRepo
 import com.gitusers.model.ModelMocker
 import com.gitusers.ui.common.CircularUserImageWithPlaceholderView
 import com.gitusers.ui.common.LoadingView
+import com.gitusers.ui.navigation.AppNavigationScreen
 import com.gitusers.ui.theme.GitUsersTheme
 import com.gitusers.ui.theme.Purple80
 import com.gitusers.ui.theme.PurpleGrey40
@@ -68,6 +69,14 @@ fun UserDetailScreen(
         state = state,
         onBackButtonClicked = {
             navController.popBackStack()
+        },
+        onCardClicked = { repo ->
+            navController.navigate(
+                AppNavigationScreen.WebPage.createRoute(
+                    repo.url,
+                    repo.name
+                )
+            )
         }
     )
 }
@@ -75,7 +84,8 @@ fun UserDetailScreen(
 @Composable
 fun UserDetailScreenContent(
     state: UserDetailScreenState,
-    onBackButtonClicked: () -> Unit = {}
+    onBackButtonClicked: () -> Unit = {},
+    onCardClicked: (GithubUserRepo) -> Unit = {}
 ) {
     GitUsersTheme {
         Scaffold(
@@ -106,7 +116,13 @@ fun UserDetailScreenContent(
                     AnimatedContent(state.overallState) { targetState ->
                         when (targetState) {
                             OverallState.LOADING -> LoadingView()
-                            OverallState.SUCCESS -> UserDetailView(state.userDetail)
+                            OverallState.SUCCESS -> {
+                                UserDetailView(
+                                    state.userDetail,
+                                    onCardClicked
+                                )
+                            }
+
                             OverallState.FAILED -> ErrorView()
                         }
                     }
@@ -119,6 +135,7 @@ fun UserDetailScreenContent(
 @Composable
 fun UserDetailView(
     userDetail: GithubUserDetail,
+    onCardClicked: (GithubUserRepo) -> Unit
 ) {
     Column {
         UserDetailHeaderView(
@@ -137,7 +154,10 @@ fun UserDetailView(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             items(userDetail.repoList) { repo ->
-                UserDetailRepoCardView(repo)
+                UserDetailRepoCardView(
+                    repo,
+                    onCardClicked
+                )
             }
         }
     }
@@ -207,12 +227,14 @@ fun UserDetailHeaderView(
 @Composable
 fun UserDetailRepoCardView(
     repo: GithubUserRepo,
+    onCardClicked: (GithubUserRepo) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
         colors = CardDefaults.cardColors().copy(
             containerColor = Purple80
         ),
+        onClick = { onCardClicked.invoke(repo) },
         modifier = modifier.fillMaxWidth()
     ) {
         Column(
