@@ -3,17 +3,29 @@ package com.gitusers.ui.screens.userlist
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gitusers.model.ModelMocker
-import kotlinx.coroutines.delay
+import com.gitusers.model.response.GithubUserResponse
+import com.gitusers.repositories.GithubRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class UserListViewModel : ViewModel() {
+@HiltViewModel
+class UserListViewModel @Inject constructor(
+    private val githubRepository: GithubRepository
+) : ViewModel() {
+
     private val _state: MutableStateFlow<UserListScreenState> =
         MutableStateFlow(ModelMocker.mockUserListScreenState())
     val state: StateFlow<UserListScreenState> = _state.asStateFlow()
+
+    private var searchJob: Job? = null
 
     fun onInputTextChanged(query: String) {
         _state.update { it.copy(inputText = query) }
@@ -41,13 +53,50 @@ class UserListViewModel : ViewModel() {
         }
 
         if (inputText.isNotEmpty()) {
-            viewModelScope.launch {
-                delay(5000)
+            search()
+        }
+    }
 
-                _state.update {
-                    it.copy(overallState = UserListScreenOverallState.SEARCH_SUCCESSFUL_STATE)
+    private fun search() {
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
+            val userListResult = withContext(Dispatchers.IO) {
+                runCatching {
+                    githubRepository.searchUsers(state.value.query)
                 }
             }
+
+            userListResult
+                .onSuccess { userList ->
+                    handleSearchSuccess(userList)
+                }
+                .onFailure {
+                    handleSearchFailed()
+                }
+        }
+    }
+
+    private fun handleSearchSuccess(userList: List<GithubUserResponse>) {
+        val newOverallState = if (userList.isEmpty()) {
+            UserListScreenOverallState.SEARCH_EMPTY_RESULT_STATE
+        } else {
+            UserListScreenOverallState.SEARCH_SUCCESSFUL_STATE
+        }
+
+        _state.update {
+            it.copy(
+                userList = userList,
+                overallState = newOverallState
+            )
+        }
+    }
+
+    private fun handleSearchFailed() {
+        _state.update {
+            it.copy(
+                userList = emptyList(),
+                overallState = UserListScreenOverallState.SEARCH_ERROR_STATE
+            )
         }
     }
 }

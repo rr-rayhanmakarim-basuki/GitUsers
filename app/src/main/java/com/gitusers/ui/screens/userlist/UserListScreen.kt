@@ -40,11 +40,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.gitusers.R
-import com.gitusers.model.GithubUser
 import com.gitusers.model.ModelMocker
+import com.gitusers.model.response.GithubUserResponse
 import com.gitusers.ui.common.CircularUserImageWithPlaceholderView
 import com.gitusers.ui.common.LoadingView
 import com.gitusers.ui.navigation.AppNavigationScreenList
@@ -55,7 +56,7 @@ import com.gitusers.ui.theme.PurpleGrey40
 @Composable
 fun UserListScreen(
     navController: NavController,
-    viewModel: UserListViewModel = viewModel()
+    viewModel: UserListViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
     UserListScreenContent(
@@ -77,7 +78,7 @@ fun UserListScreenContent(
     state: UserListScreenState,
     onTextInputChanged: (String) -> Unit = {},
     onSearch: () -> Unit = {},
-    onCardClick: (GithubUser) -> Unit = {}
+    onCardClick: (GithubUserResponse) -> Unit = {}
 ) {
     GitUsersTheme {
         Scaffold(
@@ -135,7 +136,7 @@ fun UserListScreenContent(
 @Composable
 fun UserListView(
     state: UserListScreenState,
-    onCardClick: (GithubUser) -> Unit
+    onCardClick: (GithubUserResponse) -> Unit
 ) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -203,8 +204,8 @@ fun CustomSearchBar(
 
 @Composable
 fun UserCardView(
-    user: GithubUser,
-    onCardClick: (GithubUser) -> Unit,
+    user: GithubUserResponse,
+    onCardClick: (GithubUserResponse) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Card(

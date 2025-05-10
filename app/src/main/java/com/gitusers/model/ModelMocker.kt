@@ -1,17 +1,18 @@
 package com.gitusers.model
 
+import com.gitusers.model.response.GithubUserResponse
 import com.gitusers.ui.screens.userdetail.UserDetailScreenState
 import com.gitusers.ui.screens.userlist.UserListScreenState
 
 class ModelMocker {
     companion object {
-        fun mockGithubUserList(): List<GithubUser> {
-            val user1 = GithubUser(
+        fun mockGithubUserList(): List<GithubUserResponse> {
+            val user1 = GithubUserResponse(
                 "mojombo",
                 "https://avatars.githubusercontent.com/u/1?v=4"
             )
 
-            val user2 = GithubUser(
+            val user2 = GithubUserResponse(
                 "defunkt",
                 "https://avatars.githubusercontent.com/u/2?v=4"
             )
