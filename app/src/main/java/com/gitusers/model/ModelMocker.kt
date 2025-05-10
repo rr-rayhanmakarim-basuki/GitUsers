@@ -21,7 +21,8 @@ class ModelMocker {
 
         fun mockUserListScreenState(): UserListScreenState {
             return UserListScreenState(
-                mockGithubUserList() + mockGithubUserList() + mockGithubUserList() + mockGithubUserList() + mockGithubUserList() + mockGithubUserList() + mockGithubUserList()
+                mockGithubUserList() + mockGithubUserList() + mockGithubUserList() + mockGithubUserList() + mockGithubUserList() + mockGithubUserList() + mockGithubUserList(),
+                ""
             )
         }
 

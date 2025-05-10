@@ -25,6 +25,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,6 +37,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.gitusers.R
 import com.gitusers.model.GithubUser
@@ -46,10 +49,16 @@ import com.gitusers.ui.theme.Purple80
 import com.gitusers.ui.theme.PurpleGrey40
 
 @Composable
-fun UserListScreen(navController: NavController) {
-    val state = ModelMocker.mockUserListScreenState()
+fun UserListScreen(
+    navController: NavController,
+    viewModel: UserListViewModel = viewModel()
+) {
+    val state by viewModel.state.collectAsState()
     UserListScreenContent(
         state,
+        { query ->
+            viewModel.onQueryChanged(query)
+        },
         { user ->
             navController.navigate(AppNavigationScreenList.USER_LIST_DETAIL.route)
         }
@@ -59,6 +68,7 @@ fun UserListScreen(navController: NavController) {
 @Composable
 fun UserListScreenContent(
     state: UserListScreenState,
+    onQueryChanged: (String) -> Unit = {},
     onCardClick: (GithubUser) -> Unit = {}
 ) {
     GitUsersTheme {
@@ -76,7 +86,10 @@ fun UserListScreenContent(
             },
             content = { innerPadding ->
                 Column(modifier = Modifier.padding(innerPadding)) {
-                    CustomSearchBar()
+                    CustomSearchBar(
+                        state.query,
+                        onQueryChanged
+                    )
                     HorizontalDivider(
                         thickness = 1.dp,
                         color = PurpleGrey40,
@@ -114,7 +127,10 @@ fun UserListView(
 }
 
 @Composable
-fun CustomSearchBar() {
+fun CustomSearchBar(
+    query: String,
+    onQueryChanged: (String) -> Unit
+) {
     val keyboardController = LocalSoftwareKeyboardController.current
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -132,12 +148,11 @@ fun CustomSearchBar() {
             painterResource(R.drawable.ic_search),
             contentDescription = null,
             modifier = Modifier
-                .padding(end = 16.dp)
                 .size(20.dp)
         )
         TextField(
-            value = "",
-            onValueChange = {},
+            value = query,
+            onValueChange = { newValue -> onQueryChanged.invoke(newValue) },
             placeholder = {
                 Text(stringResource(R.string.search_placehoder))
             },
