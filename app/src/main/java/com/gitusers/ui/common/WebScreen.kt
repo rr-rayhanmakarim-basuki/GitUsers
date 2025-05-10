@@ -1,8 +1,8 @@
 package com.gitusers.ui.common
 
-import android.graphics.Bitmap
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -60,14 +60,17 @@ fun WebScreen(
             },
             content = { internalPadding ->
                 Box(modifier = Modifier.padding(internalPadding)) {
-                    WebScreenView(
-                        url
-                    ) {
-                        isLoading.value = it
-                    }
+                    AnimatedContent(isLoading) { isLoading ->
+                        WebScreenView(
+                            url
+                        ) {
+                            isLoading.value = it
+                        }
 
-                    if (isLoading.value) {
-                        LoadingView(modifier = Modifier.fillMaxSize())
+
+                        if (isLoading.value) {
+                            LoadingView(modifier = Modifier.fillMaxSize())
+                        }
                     }
                 }
             }
@@ -85,15 +88,7 @@ fun WebScreenView(
             WebView(context).apply {
                 settings.javaScriptEnabled = true
                 webViewClient = object : WebViewClient() {
-                    override fun onPageStarted(
-                        view: WebView?,
-                        url: String?,
-                        favicon: Bitmap?
-                    ) {
-                        onLoadingStateChanged.invoke(true)
-                    }
-
-                    override fun onPageFinished(view: WebView?, url: String?) {
+                    override fun onPageCommitVisible(view: WebView?, url: String?) {
                         onLoadingStateChanged.invoke(false)
                     }
                 }
