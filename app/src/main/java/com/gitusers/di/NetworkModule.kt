@@ -6,10 +6,13 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -36,4 +39,8 @@ object NetworkModule {
             .build()
             .create(GitHubUserApi::class.java)
     }
+
+    @Provides
+    @Named("ioDispatcher")
+    fun provideIoDispatcher(): CoroutineDispatcher = Dispatchers.IO
 }

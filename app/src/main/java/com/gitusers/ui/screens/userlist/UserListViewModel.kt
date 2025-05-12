@@ -6,6 +6,7 @@ import com.gitusers.model.ModelMocker
 import com.gitusers.model.response.GithubUserResponse
 import com.gitusers.repositories.GithubRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,10 +16,12 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import javax.inject.Named
 
 @HiltViewModel
 class UserListViewModel @Inject constructor(
-    private val githubRepository: GithubRepository
+    private val githubRepository: GithubRepository,
+    @Named("ioDispatcher") private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : ViewModel() {
 
     private val _state: MutableStateFlow<UserListScreenState> =
@@ -60,7 +63,7 @@ class UserListViewModel @Inject constructor(
     private fun search() {
         searchJob?.cancel()
         searchJob = viewModelScope.launch {
-            val userListResult = withContext(Dispatchers.IO) {
+            val userListResult = withContext(ioDispatcher) {
                 runCatching {
                     githubRepository.searchUsers(state.value.query)
                 }

@@ -1,6 +1,5 @@
 package com.gitusers.ui.screens.userdetail
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -15,15 +14,20 @@ import javax.inject.Inject
 @HiltViewModel
 class UserDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    val useCase: UserDetailUseCase
+    private val useCase: UserDetailUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(UserDetailScreenState())
     var state = _state.asStateFlow()
 
     private val userName: String = savedStateHandle["userName"] ?: ""
 
-    init {
-        loadUserDetail()
+    fun initialLoad() {
+        if (!state.value.hasInitialLoad) {
+            loadUserDetail()
+            _state.update {
+                it.copy(hasInitialLoad = true)
+            }
+        }
     }
 
     fun loadUserDetail() {
@@ -44,8 +48,7 @@ class UserDetailViewModel @Inject constructor(
                         )
                     }
                 }
-                .onFailure { exception ->
-                    Log.e("FailedCall", exception.message.toString())
+                .onFailure { _ ->
                     _state.update {
                         it.copy(
                             overallState = OverallState.FAILED
