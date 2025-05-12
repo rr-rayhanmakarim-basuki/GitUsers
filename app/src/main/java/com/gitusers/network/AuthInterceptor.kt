@@ -8,9 +8,13 @@ import javax.inject.Inject
 class AuthInterceptor @Inject constructor() : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val token = BuildConfig.GITHUB_PAT
-        val request = chain.request().newBuilder()
-            .addHeader("Authorization", "token $token")
-            .build()
+        val request = if (token.isEmpty()) {
+            chain.request().newBuilder().build()
+        } else {
+            chain.request().newBuilder()
+                .addHeader("Authorization", "token $token").build()
+        }
+
         return chain.proceed(request)
     }
 }
