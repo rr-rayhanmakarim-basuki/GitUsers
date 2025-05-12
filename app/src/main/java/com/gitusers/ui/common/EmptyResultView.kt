@@ -19,7 +19,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.gitusers.R
-import com.gitusers.ui.theme.PurpleGrey40
+import com.gitusers.ui.theme.BlueGray700
 
 @Composable
 fun EmptyResultView(
@@ -30,7 +30,11 @@ fun EmptyResultView(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .padding(bottom = 120.dp),
+            .padding(
+                start = 32.dp,
+                end = 32.dp,
+                bottom = 80.dp
+            ),
         contentAlignment = Alignment.Center,
     ) {
         Column(
@@ -45,7 +49,7 @@ fun EmptyResultView(
             )
             Text(
                 text = message,
-                color = PurpleGrey40,
+                color = BlueGray700,
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Medium,
                 textAlign = TextAlign.Center

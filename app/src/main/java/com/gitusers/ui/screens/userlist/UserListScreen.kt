@@ -48,9 +48,10 @@ import com.gitusers.model.response.GithubUserResponse
 import com.gitusers.ui.common.CircularUserImageWithPlaceholderView
 import com.gitusers.ui.common.LoadingView
 import com.gitusers.ui.navigation.AppNavigationScreen
+import com.gitusers.ui.theme.Blue100
+import com.gitusers.ui.theme.BlueGray300
+import com.gitusers.ui.theme.BlueGray700
 import com.gitusers.ui.theme.GitUsersTheme
-import com.gitusers.ui.theme.Purple80
-import com.gitusers.ui.theme.PurpleGrey40
 
 @Composable
 fun UserListScreen(
@@ -103,7 +104,7 @@ fun UserListScreenContent(
                     )
                     HorizontalDivider(
                         thickness = 1.dp,
-                        color = PurpleGrey40,
+                        color = BlueGray300,
                         modifier = Modifier.padding(top = 16.dp)
                     )
 
@@ -169,7 +170,7 @@ fun CustomSearchBar(
             .padding(horizontal = 16.dp)
             .border(
                 width = 1.dp,
-                color = PurpleGrey40,
+                color = BlueGray300,
                 shape = RoundedCornerShape(24.dp)
             )
             .padding(horizontal = 16.dp)
@@ -211,7 +212,7 @@ fun UserCardView(
 ) {
     Card(
         colors = CardDefaults.cardColors().copy(
-            containerColor = Purple80
+            containerColor = Blue100
         ),
         onClick = { onCardClick.invoke(user) },
         elevation = CardDefaults.cardElevation(
@@ -232,7 +233,7 @@ fun UserCardView(
                 text = user.userName,
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Medium,
-                color = PurpleGrey40,
+                color = BlueGray700,
                 modifier = Modifier.padding(start = 16.dp)
             )
         }

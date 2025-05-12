@@ -29,7 +29,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -50,9 +49,10 @@ import com.gitusers.model.ModelMocker
 import com.gitusers.ui.common.CircularUserImageWithPlaceholderView
 import com.gitusers.ui.common.LoadingView
 import com.gitusers.ui.navigation.AppNavigationScreen
+import com.gitusers.ui.theme.Blue100
+import com.gitusers.ui.theme.BlueGray300
+import com.gitusers.ui.theme.BlueGray700
 import com.gitusers.ui.theme.GitUsersTheme
-import com.gitusers.ui.theme.Purple80
-import com.gitusers.ui.theme.PurpleGrey40
 
 @Composable
 fun UserDetailScreen(
@@ -148,7 +148,7 @@ fun UserDetailView(
 
         HorizontalDivider(
             thickness = 1.dp,
-            color = PurpleGrey40,
+            color = BlueGray300,
             modifier = Modifier.padding(top = 16.dp)
         )
 
@@ -186,7 +186,7 @@ fun UserDetailHeaderView(
                 text = userDetail.userName,
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
-                color = PurpleGrey40
+                color = BlueGray700
             )
 
             userDetail.fullName?.takeIf { it.isNotEmpty() }?.let {
@@ -194,7 +194,7 @@ fun UserDetailHeaderView(
                     text = it,
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.Medium,
-                    color = PurpleGrey40
+                    color = BlueGray700
                 )
             }
 
@@ -208,7 +208,7 @@ fun UserDetailHeaderView(
                     text = stringResource(R.string.followers, userDetail.followers),
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.Medium,
-                    color = PurpleGrey40
+                    color = BlueGray700
                 )
 
                 VerticalDivider(
@@ -220,7 +220,7 @@ fun UserDetailHeaderView(
                     text = stringResource(R.string.following, userDetail.following),
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.Medium,
-                    color = PurpleGrey40
+                    color = BlueGray700
                 )
             }
         }
@@ -235,7 +235,7 @@ fun UserDetailRepoCardView(
 ) {
     Card(
         colors = CardDefaults.cardColors().copy(
-            containerColor = Purple80
+            containerColor = Blue100
         ),
         onClick = { onCardClicked.invoke(repo) },
         modifier = modifier.fillMaxWidth()
@@ -247,14 +247,14 @@ fun UserDetailRepoCardView(
                 text = repo.name,
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
-                color = PurpleGrey40,
+                color = BlueGray700,
             )
 
             repo.description?.takeIf { it.isNotEmpty() }?.let {
                 Text(
                     text = repo.description,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = PurpleGrey40,
+                    color = BlueGray700,
                 )
             }
 
@@ -266,7 +266,7 @@ fun UserDetailRepoCardView(
                     text = repo.language ?: "1",
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Bold,
-                    color = PurpleGrey40,
+                    color = BlueGray700,
                     modifier = Modifier.weight(1f)
                 )
 
@@ -283,7 +283,7 @@ fun UserDetailRepoCardView(
                     text = repo.starCount.toString(),
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Medium,
-                    color = PurpleGrey40,
+                    color = BlueGray700,
                 )
             }
 

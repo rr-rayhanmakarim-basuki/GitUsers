@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.gitusers.R
-import com.gitusers.ui.theme.PurpleGrey40
+import com.gitusers.ui.theme.BlueGray300
 
 
 @Composable
@@ -40,7 +40,7 @@ fun CircularUserImageWithPlaceholderView(
         modifier = modifier
             .size(size)
             .clip(CircleShape)
-            .background(color = PurpleGrey40)
+            .background(color = BlueGray300)
     )
 }
 

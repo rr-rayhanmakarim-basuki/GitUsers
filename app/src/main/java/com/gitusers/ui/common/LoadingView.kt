@@ -18,7 +18,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.gitusers.R
-import com.gitusers.ui.theme.PurpleGrey40
+import com.gitusers.ui.theme.BlueGray300
+import com.gitusers.ui.theme.BlueGray700
 
 @Composable
 fun LoadingView(
@@ -35,7 +36,7 @@ fun LoadingView(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             CircularProgressIndicator(
-                color = PurpleGrey40,
+                color = BlueGray300,
                 strokeWidth = 4.dp,
                 modifier = Modifier
                     .padding(bottom = 32.dp)
@@ -43,7 +44,7 @@ fun LoadingView(
             )
             Text(
                 text = message,
-                color = PurpleGrey40,
+                color = BlueGray700,
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Medium
             )
