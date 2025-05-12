@@ -16,4 +16,5 @@ local.properties
 
 # Android Studio
 .idea/*
+.idea/misc.xml
 !.idea/codeStyles
